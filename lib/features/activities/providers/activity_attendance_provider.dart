@@ -1,34 +1,25 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/activity_attendance_model.dart';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../auth/providers/auth_provider.dart';
+import '../../../core/constants/app_constants.dart';
+
 final activityAttendanceProvider = FutureProvider<List<ActivityAttendanceModel>>((ref) async {
-  // Simulate network delay
-  await Future.delayed(const Duration(milliseconds: 600));
-  
-  return [
-    ActivityAttendanceModel(
-      id: '1',
-      title: 'Seminar Kewirausahaan Digital',
-      category: 'Seminar & Workshop',
-      date: DateTime(2023, 10, 12),
-      checkInTime: DateTime(2023, 10, 12, 8, 30, 12),
-      status: 'HADIR',
-    ),
-    ActivityAttendanceModel(
-      id: '2',
-      title: 'Seminar Kewirausahaan Digital', // Repeating same as mockup
-      category: 'Seminar & Workshop',
-      date: DateTime(2023, 10, 12),
-      checkInTime: DateTime(2023, 10, 12, 8, 30, 12),
-      status: 'HADIR',
-    ),
-    ActivityAttendanceModel(
-      id: '3',
-      title: 'Seminar Kewirausahaan Digital',
-      category: 'Seminar & Workshop',
-      date: DateTime(2023, 10, 12),
-      checkInTime: DateTime(2023, 10, 12, 8, 30, 12),
-      status: 'HADIR',
-    ),
-  ];
+  try {
+    final userId = ref.watch(userIdProvider);
+    if (userId == null) return [];
+
+    final response = await Supabase.instance.client
+        .from(AppConstants.activitiesTable)
+        .select()
+        .eq('profile_id', userId)
+        .order('date', ascending: false)
+        .limit(10);
+    
+    return (response as List).map((json) => ActivityAttendanceModel.fromJson(json)).toList();
+  } catch (e) {
+    // Return empty list on error as requested to avoid red snackbars
+    return [];
+  }
 });

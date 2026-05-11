@@ -104,64 +104,46 @@ class ProfileScreen extends ConsumerWidget {
       ),
       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
       child: AppCard(
-        padding: const EdgeInsets.all(16),
-        child: Row(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.bottomCenter,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 80, height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(16),
-                    color: AppColors.primarySurface,
-                  ),
-                  child: const Icon(Icons.person, size: 40, color: AppColors.primary),
+                Expanded(
+                  child: Text(profile.fullName, style: AppTextStyles.subtitle1.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
                 ),
-                Positioned(
-                  bottom: -8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1550B0),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text('VERIFIED', style: AppTextStyles.chipText.copyWith(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1550B0),
+                    borderRadius: BorderRadius.circular(10),
                   ),
+                  child: Text('VERIFIED', style: AppTextStyles.chipText.copyWith(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.scaffoldBackground,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(profile.fullName, style: AppTextStyles.subtitle1),
-                  const SizedBox(height: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: AppColors.scaffoldBackground,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.badge_outlined, color: AppColors.textSecondary, size: 12),
-                        const SizedBox(width: 4),
-                        Text('${profile.displayIdLabel}: ${profile.displayId}', style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontSize: 10, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text('${profile.statusKepegawaian ?? "Pegawai"} • ${profile.department ?? ""}', 
-                    style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary, fontSize: 10),
-                    maxLines: 1, overflow: TextOverflow.ellipsis,
-                  ),
+                  const Icon(Icons.badge_outlined, color: AppColors.textSecondary, size: 14),
+                  const SizedBox(width: 6),
+                  Text('${profile.displayIdLabel}: ${profile.displayId}', style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontSize: 11, fontWeight: FontWeight.bold)),
                 ],
               ),
+            ),
+            const SizedBox(height: 10),
+            Text('${profile.statusKepegawaian ?? "Pegawai"} • ${profile.department ?? ""}', 
+              style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary, fontSize: 12),
+              maxLines: 1, overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

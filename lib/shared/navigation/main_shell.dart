@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/providers/auth_provider.dart';
+import '../../features/profile/providers/profile_provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 
@@ -21,7 +24,14 @@ class _MainShellState extends ConsumerState<MainShell> {
   void _onItemTapped(int index) {
     if (index == _currentIndex) return;
     setState(() => _currentIndex = index);
-    context.go(_routes[index]);
+    
+    if (index == 0) {
+      final profile = ref.read(profileProvider).value;
+      final isKaryawan = profile?.isKaryawan ?? false;
+      context.go(isKaryawan ? '/karyawan-home' : '/dosen-home');
+    } else {
+      context.go(_routes[index]);
+    }
   }
 
   @override
@@ -29,7 +39,16 @@ class _MainShellState extends ConsumerState<MainShell> {
     super.didChangeDependencies();
     // Sync index from current route
     final location = GoRouterState.of(context).uri.toString();
-    for (int i = 0; i < _routes.length; i++) {
+    
+    // Check for home routes specifically
+    if (location.startsWith('/home') || location.startsWith('/dosen-home') || location.startsWith('/karyawan-home')) {
+      if (_currentIndex != 0) {
+        setState(() => _currentIndex = 0);
+      }
+      return;
+    }
+
+    for (int i = 1; i < _routes.length; i++) {
       if (location.startsWith(_routes[i])) {
         if (_currentIndex != i) {
           setState(() => _currentIndex = i);

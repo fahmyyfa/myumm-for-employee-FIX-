@@ -59,16 +59,20 @@ class ActivityAttendanceScreen extends ConsumerWidget {
                   const SizedBox(width: 8),
                   Text('JUMLAH KEGIATAN DIIKUTI', style: AppTextStyles.labelSmall.copyWith(color: Colors.white, letterSpacing: 1.0)),
                   const Spacer(),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text('34', style: AppTextStyles.heading1.copyWith(color: Colors.white, height: 1.0)),
-                      const SizedBox(width: 6),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Text('kegiatan', style: AppTextStyles.bodyMedium.copyWith(color: Colors.white)),
-                      ),
-                    ],
+                  activitiesAsync.when(
+                    data: (activities) => Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text('${activities.length}', style: AppTextStyles.heading1.copyWith(color: Colors.white, height: 1.0)),
+                        const SizedBox(width: 6),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: Text('kegiatan', style: AppTextStyles.bodyMedium.copyWith(color: Colors.white)),
+                        ),
+                      ],
+                    ),
+                    loading: () => const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)),
+                    error: (_, __) => Text('0', style: AppTextStyles.heading1.copyWith(color: Colors.white, height: 1.0)),
                   ),
                 ],
               ),
@@ -118,64 +122,46 @@ class ActivityAttendanceScreen extends ConsumerWidget {
   Widget _buildProfileCard(profile) {
     if (profile == null) return const SizedBox();
     return AppCard(
-      padding: const EdgeInsets.all(16),
-      child: Row(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.bottomCenter,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: 80, height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(16),
-                  color: AppColors.primarySurface,
-                ),
-                child: const Icon(Icons.person, size: 40, color: AppColors.primary),
+              Expanded(
+                child: Text(profile.fullName, style: AppTextStyles.subtitle1.copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
               ),
-              Positioned(
-                bottom: -8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1550B0),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text('VERIFIED', style: AppTextStyles.chipText.copyWith(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1550B0),
+                  borderRadius: BorderRadius.circular(10),
                 ),
+                child: Text('VERIFIED', style: AppTextStyles.chipText.copyWith(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.scaffoldBackground,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(profile.fullName, style: AppTextStyles.subtitle1),
-                const SizedBox(height: 6),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.scaffoldBackground,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.badge_outlined, color: AppColors.textSecondary, size: 12),
-                      const SizedBox(width: 4),
-                      Text('${profile.displayIdLabel}: ${profile.displayId}', style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontSize: 10, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text('${profile.statusKepegawaian ?? "Pegawai"} • ${profile.department ?? ""}', 
-                  style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary, fontSize: 10),
-                  maxLines: 1, overflow: TextOverflow.ellipsis,
-                ),
+                const Icon(Icons.badge_outlined, color: AppColors.textSecondary, size: 14),
+                const SizedBox(width: 6),
+                Text('${profile.displayIdLabel}: ${profile.displayId}', style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontSize: 11, fontWeight: FontWeight.bold)),
               ],
             ),
+          ),
+          const SizedBox(height: 10),
+          Text('${profile.statusKepegawaian ?? "Pegawai"} • ${profile.department ?? ""}', 
+            style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary, fontSize: 12),
+            maxLines: 1, overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

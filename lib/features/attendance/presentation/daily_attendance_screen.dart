@@ -29,7 +29,7 @@ class _DailyAttendanceScreenState extends ConsumerState<DailyAttendanceScreen> {
       backgroundColor: AppColors.scaffoldBackground,
       appBar: AppBar(
         leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new, size: 20), onPressed: () => context.pop()),
-        title: const Text('Presensi Kegiatan'),
+        title: const Text('Presensi Harian'),
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackground,
         elevation: 0,

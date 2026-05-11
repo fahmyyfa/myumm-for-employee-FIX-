@@ -10,12 +10,12 @@ class AchievementRepository {
           .from('achievements')
           .select()
           .eq('profile_id', profileId)
-          .order('date', ascending: false);
+          .order('created_at', ascending: false);
       
       return (response as List).map((e) => AchievementModel.fromJson(e)).toList();
-    } catch (_) {
-      // Fallback to demo data if table doesn't exist or error
-      return AchievementModel.demoData(profileId);
+    } catch (e) {
+      print('ERROR GETTING ACHIEVEMENTS: $e');
+      return [];
     }
   }
 }

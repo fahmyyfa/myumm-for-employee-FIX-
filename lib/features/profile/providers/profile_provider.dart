@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/profile_repository.dart';
 import '../data/family_repository.dart';
 import '../domain/profile_model.dart';
@@ -10,16 +12,27 @@ final profileRepositoryProvider = Provider((ref) => ProfileRepository());
 final familyRepositoryProvider = Provider((ref) => FamilyRepository());
 
 final profileProvider = FutureProvider<ProfileModel?>((ref) async {
-  final authState = ref.watch(authNotifierProvider);
-  if (authState.status != AuthStatus.authenticated || authState.userId == null) return null;
+  // Use userIdProvider which handles both Supabase and Demo sessions
+  final userId = ref.watch(userIdProvider);
+  
+  if (userId == null) {
+    return null;
+  }
 
-  final userId = authState.userId!;
   if (userId.startsWith('demo-dosen')) return ProfileModel.demoDosenProfile();
   if (userId.startsWith('demo-karyawan')) return ProfileModel.demoKaryawanProfile();
 
-  final repo = ref.read(profileRepositoryProvider);
-  final data = await repo.getProfile(userId);
-  return data != null ? ProfileModel.fromJson(data) : ProfileModel.demoDosenProfile();
+  try {
+    final repo = ref.read(profileRepositoryProvider);
+    final data = await repo.getProfile(userId);
+    
+    if (data != null) {
+      return ProfileModel.fromJson(data);
+    }
+  } catch (e) {
+    debugPrint('Error in profileProvider: $e');
+  }
+  return null;
 });
 
 final familyMembersProvider = FutureProvider<List<FamilyMemberModel>>((ref) async {

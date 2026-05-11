@@ -45,13 +45,16 @@ class ShimmerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: List.generate(itemCount, (index) {
-        return Padding(
-          padding: EdgeInsets.only(bottom: spacing),
-          child: LoadingShimmer(height: itemHeight),
-        );
-      }),
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      child: Column(
+        children: List.generate(itemCount, (index) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: spacing),
+            child: LoadingShimmer(height: itemHeight),
+          );
+        }),
+      ),
     );
   }
 }

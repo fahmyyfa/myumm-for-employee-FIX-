@@ -3,7 +3,7 @@ class ProfileModel {
   final String fullName;
   final String nip;
   final String? nidn;
-  final String role; // 'dosen' | 'karyawan'
+  final String roleType; // 'dosen' | 'karyawan'
   final String? email;
   final String? photoUrl;
   final String? department;
@@ -29,7 +29,7 @@ class ProfileModel {
     required this.fullName,
     required this.nip,
     this.nidn,
-    required this.role,
+    required this.roleType,
     this.email,
     this.photoUrl,
     this.department,
@@ -51,8 +51,8 @@ class ProfileModel {
     this.createdAt,
   });
 
-  bool get isDosen => role == 'dosen';
-  bool get isKaryawan => role == 'karyawan';
+  bool get isDosen => roleType.trim().toLowerCase() == 'dosen';
+  bool get isKaryawan => roleType.trim().toLowerCase() == 'karyawan';
 
   String get displayId => nidn ?? nip;
   String get displayIdLabel => isDosen ? 'NIDN' : 'NIP';
@@ -73,12 +73,15 @@ class ProfileModel {
   }
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    print('PROFILE MODEL RAW JSON: $json');
+    final id = json['id']?.toString() ?? '';
+    print('PROFILE MODEL USER ID: $id');
     return ProfileModel(
-      id: json['id'] as String,
-      fullName: json['full_name'] as String? ?? '',
-      nip: json['nip'] as String? ?? '',
-      nidn: json['nidn'] as String?,
-      role: json['role'] as String? ?? 'karyawan',
+      id: json['id']?.toString() ?? '',
+      fullName: json['full_name']?.toString() ?? '',
+      nip: json['nip']?.toString() ?? '',
+      nidn: json['nidn']?.toString(),
+      roleType: json['role_type']?.toString() ?? 'karyawan',
       email: json['email'] as String?,
       photoUrl: json['photo_url'] as String?,
       department: json['department'] as String?,
@@ -111,7 +114,7 @@ class ProfileModel {
       'full_name': fullName,
       'nip': nip,
       'nidn': nidn,
-      'role': role,
+      'role_type': roleType,
       'email': email,
       'photo_url': photoUrl,
       'department': department,
@@ -137,7 +140,7 @@ class ProfileModel {
     String? fullName,
     String? nip,
     String? nidn,
-    String? role,
+    String? roleType,
     String? email,
     String? photoUrl,
     String? department,
@@ -158,7 +161,7 @@ class ProfileModel {
       fullName: fullName ?? this.fullName,
       nip: nip ?? this.nip,
       nidn: nidn ?? this.nidn,
-      role: role ?? this.role,
+      roleType: roleType ?? this.roleType,
       email: email ?? this.email,
       photoUrl: photoUrl ?? this.photoUrl,
       department: department ?? this.department,
@@ -188,7 +191,7 @@ class ProfileModel {
       fullName: 'Dr. Eng. Muhammad Arifin, S.T., M.Sc.',
       nip: '00000000001',
       nidn: '0712345678',
-      role: 'dosen',
+      roleType: 'dosen',
       email: 'arifin@umm.ac.id',
       department: 'Informatika',
       faculty: 'Fakultas Teknik',
@@ -215,7 +218,7 @@ class ProfileModel {
       id: 'demo-karyawan-001',
       fullName: 'Siti Rahayu, S.E.',
       nip: '00000000002',
-      role: 'karyawan',
+      roleType: 'karyawan',
       email: 'siti.rahayu@umm.ac.id',
       department: 'Biro Administrasi',
       faculty: 'Rektorat',

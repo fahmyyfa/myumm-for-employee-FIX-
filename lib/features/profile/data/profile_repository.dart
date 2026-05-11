@@ -6,8 +6,11 @@ class ProfileRepository {
 
   Future<Map<String, dynamic>?> getProfile(String userId) async {
     try {
-      return await _client.from(AppConstants.profilesTable).select().eq('id', userId).maybeSingle();
-    } catch (_) { return null; }
+      final response = await _client.from(AppConstants.profilesTable).select().eq('id', userId).maybeSingle();
+      return response;
+    } catch (e) { 
+      return null; 
+    }
   }
 
   Future<void> updateProfile(String userId, Map<String, dynamic> data) async {

@@ -89,6 +89,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             content: Text(next.errorMessage!),
             backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 10), // Much longer to read full error
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10)),
           ),

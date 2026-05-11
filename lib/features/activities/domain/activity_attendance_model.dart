@@ -14,4 +14,15 @@ class ActivityAttendanceModel {
     required this.checkInTime,
     required this.status,
   });
+
+  factory ActivityAttendanceModel.fromJson(Map<String, dynamic> json) {
+    return ActivityAttendanceModel(
+      id: json['id']?.toString() ?? '',
+      title: json['title'] ?? '',
+      category: json['category'] ?? '',
+      date: json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
+      checkInTime: json['check_in_time'] != null ? DateTime.parse(json['check_in_time']) : DateTime.now(),
+      status: json['status'] ?? '',
+    );
+  }
 }

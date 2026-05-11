@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 import '../data/auth_repository.dart';
 import '../domain/auth_state.dart';
 import '../../profile/domain/profile_model.dart';
+import '../../profile/providers/profile_provider.dart';
 
 // Auth repository provider
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -20,34 +21,16 @@ final authChangeNotifierProvider = ChangeNotifierProvider<AuthChangeNotifier>((r
 final authNotifierProvider =
     StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final changeNotifier = ref.read(authChangeNotifierProvider);
-  return AuthNotifier(ref.read(authRepositoryProvider), changeNotifier);
+  return AuthNotifier(ref, ref.read(authRepositoryProvider), changeNotifier);
 });
 
-// Current profile provider — fetches profile after auth
-final currentProfileProvider = FutureProvider<ProfileModel?>((ref) async {
+// Simple provider to expose the current user ID (supports demo and real auth)
+final userIdProvider = Provider<String?>((ref) {
   final authState = ref.watch(authNotifierProvider);
-
-  if (authState.status != AuthStatus.authenticated || authState.userId == null) {
-    return null;
+  if (authState.status == AuthStatus.authenticated) {
+    return authState.userId;
   }
-
-  final userId = authState.userId!;
-  if (userId.startsWith('demo-dosen')) return ProfileModel.demoDosenProfile();
-  if (userId.startsWith('demo-karyawan')) return ProfileModel.demoKaryawanProfile();
-
-  try {
-    final repo = ref.read(authRepositoryProvider);
-    final data = await repo.fetchProfile(userId);
-
-    if (data != null) {
-      return ProfileModel.fromJson(data);
-    }
-  } catch (e) {
-    // If error occurs (e.g., table not created), ignore and return demo
-  }
-
-  // Return demo profile if no data in DB (for development)
-  return ProfileModel.demoDosenProfile();
+  return null;
 });
 
 // Simple boolean check
@@ -62,21 +45,23 @@ class AuthChangeNotifier extends ChangeNotifier {
 
 /// Auth state notifier
 class AuthNotifier extends StateNotifier<AuthState> {
+  final Ref _ref;
   final AuthRepository _repository;
   final AuthChangeNotifier _changeNotifier;
   StreamSubscription<sb.AuthState>? _authSubscription;
 
-  AuthNotifier(this._repository, this._changeNotifier) : super(const AuthState()) {
+  AuthNotifier(this._ref, this._repository, this._changeNotifier) : super(const AuthState()) {
     _init();
   }
 
-  void _init() {
+  void _init() async {
     // Check if already authenticated
     final session = _repository.currentSession;
     if (session != null) {
       state = AuthState(
         status: AuthStatus.authenticated,
         userId: session.user.id,
+        userRole: 'unknown',
       );
     } else {
       state = const AuthState(status: AuthStatus.unauthenticated);
@@ -86,9 +71,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
     _authSubscription = _repository.onAuthStateChange.listen((data) {
       final session = data.session;
       if (session != null) {
+        final userId = session.user.id;
         state = AuthState(
           status: AuthStatus.authenticated,
-          userId: session.user.id,
+          userId: userId,
+          userRole: 'unknown', // Role will be determined by profileProvider
         );
       } else {
         state = const AuthState(status: AuthStatus.unauthenticated);
@@ -110,10 +97,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
 
       if (response.session != null) {
-        state = AuthState(
-          status: AuthStatus.authenticated,
-          userId: response.user?.id,
-        );
+        final userId = response.user?.id;
+        if (userId != null) {
+          state = AuthState(
+            status: AuthStatus.authenticated,
+            userId: userId,
+            userRole: 'unknown',
+          );
+        }
       } else {
         state = const AuthState(
           status: AuthStatus.error,
@@ -134,6 +125,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = AuthState(
       status: AuthStatus.authenticated,
       userId: asDosen ? 'demo-dosen-001' : 'demo-karyawan-001',
+      userRole: asDosen ? 'dosen' : 'karyawan',
     );
     _changeNotifier.notify();
   }
@@ -147,17 +139,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   String _parseError(dynamic error) {
+    debugPrint('DEBUG ERROR PARSE: $error');
     if (error is sb.AuthException) {
-      switch (error.message) {
-        case 'Invalid login credentials':
-          return 'Username atau password salah.';
-        case 'Email not confirmed':
-          return 'Email belum dikonfirmasi.';
-        default:
-          return error.message;
-      }
+      return 'Auth Error: ${error.message}${error.statusCode != null ? ' (${error.statusCode})' : ''}';
     }
-    return 'Terjadi kesalahan. Silakan coba lagi.';
+    return 'Terjadi kesalahan: ${error.toString()}';
   }
 
   @override

@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../providers/academic_rank_provider.dart';
 import '../domain/academic_rank_model.dart';
+import '../../profile/providers/profile_provider.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../profile/domain/profile_model.dart';
 
@@ -22,7 +23,7 @@ class _AcademicRankScreenState extends ConsumerState<AcademicRankScreen> {
   @override
   Widget build(BuildContext context) {
     final ranksAsync = ref.watch(academicRankProvider);
-    final profileAsync = ref.watch(currentProfileProvider);
+    final profileAsync = ref.watch(profileProvider);
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,

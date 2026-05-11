@@ -9,6 +9,7 @@ import '../../../core/widgets/loading_shimmer.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../providers/history_provider.dart';
 import '../domain/history_models.dart';
+import '../../profile/providers/profile_provider.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../profile/domain/profile_model.dart';
 
@@ -19,7 +20,7 @@ class HistoryDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final itemsAsync = ref.watch(historyCategoryProvider(category));
-    final profileAsync = ref.watch(currentProfileProvider);
+    final profileAsync = ref.watch(profileProvider);
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,

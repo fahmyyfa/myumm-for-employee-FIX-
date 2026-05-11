@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../features/auth/domain/auth_state.dart';
 import '../features/auth/providers/auth_provider.dart';
 import '../features/auth/presentation/login_screen.dart';
+import '../features/profile/providers/profile_provider.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/history/presentation/history_screen.dart';
 import '../features/history/presentation/history_detail_screen.dart';
@@ -50,7 +51,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isLoginRoute = state.matchedLocation == '/login';
 
       if (!isAuth && !isLoginRoute) return '/login';
-      if (isAuth && isLoginRoute) return '/home';
+      
+      if (isAuth) {
+        if (isLoginRoute || state.matchedLocation == '/home' || state.matchedLocation == '/') {
+          // Check the profile role if available
+          final profile = ref.read(profileProvider).value;
+          if (profile != null) {
+            if (profile.roleType.trim().toLowerCase() == 'karyawan') return '/karyawan-home';
+            if (profile.roleType.trim().toLowerCase() == 'dosen') return '/dosen-home';
+            return '/home'; // Loading/Fallback
+          }
+          // Default fallback while profile is loading
+          return '/home';
+        }
+      }
+      
       return null;
     },
     routes: [
@@ -63,6 +78,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: '/home',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: HomeScreen(),
+            ),
+          ),
+          GoRoute(
+            path: '/dosen-home',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: HomeScreen(),
+            ),
+          ),
+          GoRoute(
+            path: '/karyawan-home',
             pageBuilder: (context, state) => const NoTransitionPage(
               child: HomeScreen(),
             ),
@@ -101,10 +128,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
-        path: '/achievements/:category',
+        path: '/achievements/detail/:category',
         builder: (context, state) => AchievementDetailScreen(
           category: state.pathParameters['category'] ?? '',
         ),
+      ),
+      GoRoute(
+        path: '/achievements/:category',
+        redirect: (context, state) {
+          final category = state.pathParameters['category'];
+          return '/achievements/detail/$category';
+        },
       ),
       GoRoute(
         path: '/profile/family/add',

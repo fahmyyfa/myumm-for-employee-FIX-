@@ -3,6 +3,8 @@ class DailyLogModel {
   final String profileId;
   final DateTime date;
   final String activity;
+  final String? category;
+  final String? location;
   final String? description;
   final String? startTime;
   final String? endTime;
@@ -10,14 +12,19 @@ class DailyLogModel {
 
   const DailyLogModel({
     this.id, required this.profileId, required this.date, required this.activity,
-    this.description, this.startTime, this.endTime, this.status,
+    this.category, this.location, this.description, this.startTime, this.endTime, this.status,
   });
+
+  String get title => activity;
 
   factory DailyLogModel.fromJson(Map<String, dynamic> json) {
     return DailyLogModel(
       id: json['id'] as String?, profileId: json['profile_id'] as String? ?? '',
-      date: DateTime.tryParse(json['date'] as String? ?? '') ?? DateTime.now(),
-      activity: json['activity'] as String? ?? '', description: json['description'] as String?,
+      date: DateTime.tryParse(json['date'] as String? ?? json['created_at'] as String? ?? '') ?? DateTime.now(),
+      activity: json['activity'] as String? ?? json['title'] as String? ?? '', 
+      category: json['category'] as String?,
+      location: json['location'] as String?,
+      description: json['description'] as String?,
       startTime: json['start_time'] as String?, endTime: json['end_time'] as String?,
       status: json['status'] as String?,
     );
