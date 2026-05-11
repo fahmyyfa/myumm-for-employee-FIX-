@@ -110,8 +110,8 @@ class DosenHomeContent extends StatelessWidget {
                       // Informasi Kegiatan
                       Text('Informasi Kegiatan', style: AppTextStyles.sectionTitle),
                       const SizedBox(height: 10),
-                      _buildActivityCard('Rapat Karyawan', '10 April, 09:00 WIB • ICT Center UMM'),
-                      _buildActivityCard('Rapat Karyawan', '10 April, 09:00 WIB • ICT Center UMM'),
+                      _buildActivityCard(context, 'Rapat Karyawan', '10 April, 09:00 WIB • ICT Center UMM'),
+                      _buildActivityCard(context, 'Rapat Karyawan', '10 April, 09:00 WIB • ICT Center UMM'),
                       const SizedBox(height: 20),
                       // Agenda Mengajar Terdekat
                       _buildAgendaCard(context),
@@ -169,29 +169,32 @@ class DosenHomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildActivityCard(String title, String subtitle) {
-    return AppCard(
-      padding: const EdgeInsets.all(14),
-      child: Row(
-        children: [
-          Container(
-            width: 42, height: 42,
-            decoration: BoxDecoration(color: AppColors.primarySurface, borderRadius: BorderRadius.circular(12)),
-            child: const Icon(Icons.campaign_outlined, color: AppColors.primary, size: 22),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: AppTextStyles.labelLarge),
-                const SizedBox(height: 2),
-                Text(subtitle, style: AppTextStyles.bodySmall),
-              ],
+  Widget _buildActivityCard(BuildContext context, String title, String subtitle) {
+    return GestureDetector(
+      onTap: () => context.push('/notifications'),
+      child: AppCard(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          children: [
+            Container(
+              width: 42, height: 42,
+              decoration: BoxDecoration(color: AppColors.primarySurface, borderRadius: BorderRadius.circular(12)),
+              child: const Icon(Icons.campaign_outlined, color: AppColors.primary, size: 22),
             ),
-          ),
-          const Icon(Icons.chevron_right, color: AppColors.textHint),
-        ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: AppTextStyles.labelLarge),
+                  const SizedBox(height: 2),
+                  Text(subtitle, style: AppTextStyles.bodySmall),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: AppColors.textHint),
+          ],
+        ),
       ),
     );
   }
@@ -252,9 +255,9 @@ class DosenHomeContent extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              _buildAgendaBtn(Icons.fact_check_outlined, 'Presensi', AppColors.success, () => context.push('/attendance/daily')),
+              _buildAgendaBtn(Icons.fact_check_outlined, 'Presensi', AppColors.success, () => context.push('/attendance/s-001')),
               const SizedBox(width: 8),
-              _buildAgendaBtn(Icons.edit_calendar_outlined, 'Jadwal', AppColors.warning, () => context.push('/schedule')),
+              _buildAgendaBtn(Icons.edit_calendar_outlined, 'Jadwal', AppColors.warning, () => context.push('/schedule/s-001')),
             ],
           ),
         ],

@@ -192,9 +192,10 @@ class ObeCapaianDetailScreen extends ConsumerWidget {
           BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 4, offset: const Offset(0, 2)),
         ],
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
           Container(
             width: 4,
             decoration: const BoxDecoration(
@@ -279,6 +280,7 @@ class ObeCapaianDetailScreen extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

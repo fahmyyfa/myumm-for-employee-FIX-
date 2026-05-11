@@ -32,9 +32,12 @@ class KaryawanHomeContent extends StatelessWidget {
                   ]),
                 )),
                 const SizedBox(width: 10),
-                Container(width: 44, height: 44,
-                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
-                  child: const Icon(Icons.notifications_outlined, color: Colors.white, size: 22)),
+                GestureDetector(
+                  onTap: () => context.push('/notifications'),
+                  child: Container(width: 44, height: 44,
+                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
+                    child: const Icon(Icons.notifications_outlined, color: Colors.white, size: 22)),
+                ),
               ]),
             ),
             const SizedBox(height: 16),
@@ -68,8 +71,8 @@ class KaryawanHomeContent extends StatelessWidget {
                   const SizedBox(height: 20),
                   Text('Informasi Kegiatan', style: AppTextStyles.sectionTitle),
                   const SizedBox(height: 10),
-                  _buildActivityCard('Rapat Koordinasi Bulanan', '15 April, 09:00 WIB • Aula Rektorat'),
-                  _buildActivityCard('Pelatihan Sistem Informasi', '18 April, 13:00 WIB • Lab. Komputer'),
+                  _buildActivityCard(context, 'Rapat Koordinasi Bulanan', '15 April, 09:00 WIB • Aula Rektorat'),
+                  _buildActivityCard(context, 'Pelatihan Sistem Informasi', '18 April, 13:00 WIB • Lab. Komputer'),
                   const SizedBox(height: 20),
                   _buildAgendaCard(context),
                   const SizedBox(height: 20),
@@ -109,19 +112,22 @@ class KaryawanHomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildActivityCard(String title, String subtitle) {
-    return AppCard(padding: const EdgeInsets.all(14), child: Row(children: [
-      Container(width: 42, height: 42,
-        decoration: BoxDecoration(color: AppColors.primarySurface, borderRadius: BorderRadius.circular(12)),
-        child: const Icon(Icons.campaign_outlined, color: AppColors.primary, size: 22)),
-      const SizedBox(width: 12),
-      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(title, style: AppTextStyles.labelLarge),
-        const SizedBox(height: 2),
-        Text(subtitle, style: AppTextStyles.bodySmall),
+  Widget _buildActivityCard(BuildContext context, String title, String subtitle) {
+    return GestureDetector(
+      onTap: () => context.push('/notifications'),
+      child: AppCard(padding: const EdgeInsets.all(14), child: Row(children: [
+        Container(width: 42, height: 42,
+          decoration: BoxDecoration(color: AppColors.primarySurface, borderRadius: BorderRadius.circular(12)),
+          child: const Icon(Icons.campaign_outlined, color: AppColors.primary, size: 22)),
+        const SizedBox(width: 12),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(title, style: AppTextStyles.labelLarge),
+          const SizedBox(height: 2),
+          Text(subtitle, style: AppTextStyles.bodySmall),
+        ])),
+        const Icon(Icons.chevron_right, color: AppColors.textHint),
       ])),
-      const Icon(Icons.chevron_right, color: AppColors.textHint),
-    ]));
+    );
   }
 
   Widget _buildAgendaCard(BuildContext context) {

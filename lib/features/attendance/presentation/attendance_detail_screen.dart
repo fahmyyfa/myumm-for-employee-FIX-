@@ -62,31 +62,48 @@ class _AttendanceDetailScreenState extends ConsumerState<AttendanceDetailScreen>
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
-                  width: double.infinity, padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(gradient: AppColors.cardGradient, borderRadius: BorderRadius.circular(16)),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('MATA KULIAH', style: AppTextStyles.labelSmall.copyWith(
-                      color: Colors.white.withValues(alpha: 0.7), letterSpacing: 1)),
-                    const SizedBox(height: 4),
-                    Row(children: [
-                      Expanded(child: Text(schedule.courseName,
-                        style: AppTextStyles.subtitle1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
-                      Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
-                        child: Text('${schedule.sks} SKS', style: AppTextStyles.chipText.copyWith(color: Colors.white))),
-                    ]),
-                    const SizedBox(height: 8),
-                    Row(children: [
-                      Icon(Icons.groups_outlined, color: Colors.white.withValues(alpha: 0.8), size: 16),
-                      const SizedBox(width: 6),
-                      Text(schedule.className, style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withValues(alpha: 0.8))),
-                      const SizedBox(width: 16),
-                      Icon(Icons.calendar_today_outlined, color: Colors.white.withValues(alpha: 0.8), size: 14),
-                      const SizedBox(width: 6),
-                      Text('TA ${schedule.academicYear}',
-                        style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withValues(alpha: 0.8))),
-                    ]),
-                  ]),
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2C5BA1),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(color: const Color(0xFF2C5BA1).withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('MATA KULIAH', style: AppTextStyles.chipText.copyWith(color: Colors.white.withValues(alpha: 0.8), letterSpacing: 1.0)),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text('${schedule.sks} SKS', style: AppTextStyles.caption.copyWith(color: const Color(0xFF2C5BA1), fontWeight: FontWeight.bold)),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(schedule.courseName, style: AppTextStyles.heading2.copyWith(color: Colors.white)),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          const Icon(Icons.groups_outlined, color: Colors.white, size: 16),
+                          const SizedBox(width: 8),
+                          Text(schedule.className, style: AppTextStyles.caption.copyWith(color: Colors.white)),
+                          const SizedBox(width: 24),
+                          const Icon(Icons.calendar_today_outlined, color: Colors.white, size: 14),
+                          const SizedBox(width: 8),
+                          Text('TA ${schedule.academicYear}', style: AppTextStyles.caption.copyWith(color: Colors.white)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -262,11 +279,11 @@ class _StudentRow extends StatelessWidget {
           Text(student.studentName, style: AppTextStyles.labelLarge.copyWith(fontSize: 13)),
           Text(student.studentNim, style: AppTextStyles.caption),
         ])),
-        _StatusChip('Hadir', AppColors.hadirBg, student.status == 'Hadir', () => onStatusChanged('Hadir')),
+        _StatusChip('Hadir', const Color(0xFF00B074), student.status == 'Hadir', () => onStatusChanged('Hadir')),
         const SizedBox(width: 4),
-        _StatusChip('Sakit', AppColors.sakitBg, student.status == 'Sakit', () => onStatusChanged('Sakit')),
+        _StatusChip('Sakit', const Color(0xFFE87F00), student.status == 'Sakit', () => onStatusChanged('Sakit')),
         const SizedBox(width: 4),
-        _StatusChip('Ijin', AppColors.ijinBg, student.status == 'Ijin', () => onStatusChanged('Ijin')),
+        _StatusChip('Ijin', const Color(0xFF1550B0), student.status == 'Ijin', () => onStatusChanged('Ijin')),
         const SizedBox(width: 6),
         Icon(Icons.refresh_rounded, color: AppColors.error.withValues(alpha: 0.6), size: 20),
       ]),

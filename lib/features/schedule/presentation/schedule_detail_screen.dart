@@ -83,7 +83,7 @@ class ScheduleDetailScreen extends ConsumerWidget {
                       onTap: () => context.push('/attendance/${s.id}'),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                        decoration: BoxDecoration(color: AppColors.success, borderRadius: BorderRadius.circular(20)),
+                        decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(20)),
                         child: Row(mainAxisSize: MainAxisSize.min, children: [
                           const Icon(Icons.check_circle, color: Colors.white, size: 16),
                           const SizedBox(width: 6),

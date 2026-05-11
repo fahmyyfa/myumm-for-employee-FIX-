@@ -91,15 +91,6 @@ class ObeKinerjaDetailScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  _buildTabButton('Kelas A', true),
-                  _buildTabButton('Kelas B', false),
-                  _buildTabButton('Kelas C', false),
-                  _buildTabButton('Kelas D', false),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
                   Expanded(child: _buildPelaksanaanStat('PRESENSI MHS', '${kinerja.presensiMhs}%')),
                   const SizedBox(width: 8),
                   Expanded(child: _buildPelaksanaanStat('PRESENSI DOSEN', '${kinerja.presensiDosen}%')),
@@ -154,29 +145,48 @@ class ObeKinerjaDetailScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                          decoration: BoxDecoration(color: const Color(0xFFD3E3FD), borderRadius: BorderRadius.circular(16)),
+                          child: Text('Kelas A', style: AppTextStyles.subtitle2.copyWith(color: const Color(0xFF1550B0))),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(16)),
+                          child: Text('42 Mahasiswa', style: AppTextStyles.caption.copyWith(color: const Color(0xFF1550B0), fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(color: const Color(0xFFF8F9FA), borderRadius: BorderRadius.circular(8)),
-                      child: Column(
+                    Row(
+                      children: [
+                        Expanded(flex: 2, child: Text('GRADE', style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 10))),
+                        Expanded(child: Text('JML MHS', style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 10), textAlign: TextAlign.center)),
+                        Expanded(flex: 1, child: Text('PERSEN', style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 10), textAlign: TextAlign.right)),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ...[
+                      {'grade': 'A', 'jml': '12', 'persen': '28.5%', 'color': const Color(0xFF1550B0)},
+                      {'grade': 'B+', 'jml': '8', 'persen': '19.0%', 'color': AppColors.textPrimary},
+                      {'grade': 'B', 'jml': '10', 'persen': '23.8%', 'color': const Color(0xFF1550B0)},
+                      {'grade': 'C+', 'jml': '8', 'persen': '19.0%', 'color': AppColors.textPrimary},
+                      {'grade': 'D', 'jml': '2', 'persen': '4.2%', 'color': AppColors.textSecondary},
+                      {'grade': 'E', 'jml': '2', 'persen': '4.2%', 'color': AppColors.textSecondary},
+                    ].map((row) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: ['No', 'Kelas', 'Mhs', 'A', 'B+', 'B', 'C+', 'C', 'D', 'E', 'X']
-                                .map((t) => Text(t, style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 10))).toList(),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('F', style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontSize: 10)),
-                              Text('46', style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontSize: 10)),
-                              ...['0', '0', '0', '0', '0', '0', '0', '0', '0'].map((t) => Text(t, style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontSize: 10))),
-                            ],
-                          ),
+                          Expanded(flex: 2, child: Text(row['grade'] as String, style: AppTextStyles.subtitle2.copyWith(fontWeight: FontWeight.bold))),
+                          Expanded(child: Text(row['jml'] as String, style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary), textAlign: TextAlign.center)),
+                          Expanded(flex: 1, child: Text(row['persen'] as String, style: AppTextStyles.subtitle2.copyWith(color: row['color'] as Color, fontSize: 11), textAlign: TextAlign.right)),
                         ],
                       ),
-                    ),
+                    )),
                   ],
                 ),
               ),
@@ -309,23 +319,6 @@ class ObeKinerjaDetailScreen extends ConsumerWidget {
           const SizedBox(height: 12),
           ...tidakLengkap.map((item) => Text(item, style: AppTextStyles.caption.copyWith(color: const Color(0xFFD94B2B)))),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTabButton(String text, bool isSelected) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.only(right: 8),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF1550B0) : Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: isSelected ? null : Border.all(color: AppColors.border),
-        ),
-        child: Center(
-          child: Text(text, style: AppTextStyles.caption.copyWith(color: isSelected ? Colors.white : const Color(0xFF1550B0), fontWeight: FontWeight.bold, fontSize: 10)),
-        ),
       ),
     );
   }
